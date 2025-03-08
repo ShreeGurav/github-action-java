@@ -31,6 +31,18 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # Step 6: Push image to ACR
+    - name: Push image to ACR
+      run: |
+        az acr login --name aks-github-action
+        docker tag myapp/java-image:latest githubactionjava.azurecr.io/myapp/java-image:latest
+        docker push githubactionjava.azurecr.io/myapp/java-image:latest      
+
 
 
    

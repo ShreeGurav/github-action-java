@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  id-token: write
+  contents: read    
+
 jobs:
   build:
 
@@ -32,18 +36,13 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Azure login
-      uses: azure/login@v2
+      uses: azure/login@v1
       with:
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        auth-type: oidc
 
-    - name: Azure CLI script
-      uses: azure/cli@v2
-      with:
-        azcliversion: latest
-        inlineScript: |
-          az account show
 
     # Step 6: Push image to ACR
     - name: Push image to ACR

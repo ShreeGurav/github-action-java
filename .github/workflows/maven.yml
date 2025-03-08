@@ -44,8 +44,8 @@ jobs:
         auth-type: SERVICE_PRINCIPAL
       env:
         ACTIONS_STEP_DEBUG: true
-
-
+      
+     
     # Step 6: Push image to ACR
     - name: Push image to ACR
       run: |

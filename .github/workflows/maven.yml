@@ -24,12 +24,13 @@ jobs:
     - name: Build & push Docker image
       uses: mr-smithers-excellent/docker-build-push@v6
       with:
-        iamge: shreegurav/java-image
+        image: shreegurav/java-image
         tag: latest
-        registry: dokcer.io
+        registry: docker.io
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+
 
 
    

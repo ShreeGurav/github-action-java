@@ -30,3 +30,11 @@ jobs:
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+        addLatest: false
+        addTimestamp: false
+        enableBuildKit: false
+        multiPlatform: false
+        overrideDriver: false
+        pushImage: true
+
+   

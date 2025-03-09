@@ -24,9 +24,31 @@ jobs:
     - name: Build & push Docker image
       uses: mr-smithers-excellent/docker-build-push@v6
       with:
+<<<<<<< HEAD
         iamge: shreegurav/java-image
         tag: latest
         registry: dokcer.io
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+=======
+        login-server: globalgithubaction.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+
+    # Step 5: Build and Push Docker Image
+    - name: Build and Push Docker Image
+      run: |
+        docker build . -t globalgithubaction.azurecr.io/myapp:${{ github.sha }}
+        docker push globalgithubaction.azurecr.io/myapp:${{ github.sha }}
+        
+    - name: Set up AKS credentials
+      run: az aks get-credentials --resource-group ag-acr-githubsction --name aks-github-action --overwrite-existing
+
+    # Step 6: Deploy to AKS
+    - name: Deploy to AKS
+      run: |
+        kubectl apply -f deployment.yaml
+        kubectl set image deployment/myapp-deployment myapp-container=globalgithubaction.azurecr.io/myapp:${{ github.sha }}
+
+>>>>>>> 9d00615e28a8e297495ba6412368521202890813

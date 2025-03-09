@@ -6,35 +6,49 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  id-token: write
+  contents: read    
+
 jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    defaults: 
+      run:
+        shell: bash
+      
     steps:
-    - uses: actions/checkout@v4
+    # Step 1: Checkout code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Set up JDK 17
     - name: Set up JDK 17
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v3
       with:
         java-version: '17'
+        distribution: 'temurin' # Specify the JDK distribution
         cache: maven
+
+    # Step 3: Build with Maven
     - name: Build with Maven
       run: mvn clean install
 
-    - name: Build & push Docker image
-      uses: mr-smithers-excellent/docker-build-push@v6
+    # Step 4: Log in to Azure Container Registry (ACR)
+    - name: Log in to ACR
+      uses: azure/docker-login@v1
       with:
-<<<<<<< HEAD
-        iamge: shreegurav/java-image
-        tag: latest
-        registry: dokcer.io
-        dockerfile: Dockerfile
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-=======
         login-server: globalgithubaction.azurecr.io
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
+
+    # Step 5: Build and Push Docker Image
+    - name: Build and Push Docker Image
+      run: |
+        docker build . -t globalgithubaction.azurecr.io/myapp:${{ github.sha }}
+        docker push globalgithubaction.azurecr.io/myapp:${{ github.sha }}
+
 
     # Step 5: Build and Push Docker Image
     - name: Build and Push Docker Image
@@ -50,5 +64,3 @@ jobs:
       run: |
         kubectl apply -f deployment.yaml
         kubectl set image deployment/myapp-deployment myapp-container=globalgithubaction.azurecr.io/myapp:${{ github.sha }}
-
->>>>>>> 9d00615e28a8e297495ba6412368521202890813

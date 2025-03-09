@@ -11,10 +11,10 @@ permissions:
   contents: read    
 
 jobs:
-  build:
+  build-and-deploy:
 
     runs-on: ubuntu-latest
-    defaults: 
+    defaults:
       run:
         shell: bash
       
@@ -28,7 +28,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '17'
-        distribution: 'temurin' # Specify the JDK distribution
+        distribution: 'temurin'
         cache: maven
 
     # Step 3: Build with Maven
@@ -49,17 +49,11 @@ jobs:
         docker build . -t globalgithubaction.azurecr.io/myapp:${{ github.sha }}
         docker push globalgithubaction.azurecr.io/myapp:${{ github.sha }}
 
-
-    # Step 5: Build and Push Docker Image
-    - name: Build and Push Docker Image
-      run: |
-        docker build . -t globalgithubaction.azurecr.io/myapp:${{ github.sha }}
-        docker push globalgithubaction.azurecr.io/myapp:${{ github.sha }}
-        
+    # Step 6: Set up AKS credentials
     - name: Set up AKS credentials
       run: az aks get-credentials --resource-group ag-acr-githubsction --name aks-github-action --overwrite-existing
 
-    # Step 6: Deploy to AKS
+    # Step 7: Deploy to AKS
     - name: Deploy to AKS
       run: |
         kubectl apply -f deployment.yaml

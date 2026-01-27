@@ -50,6 +50,7 @@ jobs:
         docker push globalgithubaction.azurecr.io/myapp:${{ github.sha }}
         az acr repository list --name globalgithubaction.azurecr.io --output table
         az acr repository show-tags --name globalgithubaction.azurecr.io --repository myapp --output table
+        
 
     # Step 6: Set up AKS credentials
     # - name: Azure Login

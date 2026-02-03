@@ -61,6 +61,7 @@ jobs:
     #      subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     # - name: Set up AKS credentials
+    #  uses: azure/aks-set-context@v1
     #   run: az aks get-credentials --resource-group ag-acr-githubsction --name aks-github-action --overwrite-existing
 
 
